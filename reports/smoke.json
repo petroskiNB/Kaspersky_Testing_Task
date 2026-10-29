@@ -1,0 +1,178 @@
+{
+  "label": "smoke",
+  "started_utc": "2026-10-29T14:22:37.323525+00:00",
+  "base_url": "http://127.0.0.1:8001",
+  "requests_per_scenario": 1,
+  "max_output_tokens": 8,
+  "images": [
+    {
+      "pod": "vllm-5c9d5c89c5-ps6n8",
+      "containers": [
+        {
+          "name": "vllm",
+          "image_id": "sha256:fa427ae3e93e6b13d170f8267ce857a81de05e114e6f023b98ae2cdf6c565f04"
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "vllm",
+      "resources": {
+        "limits": {
+          "cpu": "4",
+          "memory": "10Gi"
+        },
+        "requests": {
+          "cpu": "2",
+          "memory": "8Gi"
+        }
+      }
+    }
+  ],
+  "configmaps": [
+    {
+      "name": "vllm-config",
+      "data": {
+        "server.yaml": "model: /models/qwen\nserved-model-name: qwen\nhost: 0.0.0.0\nport: 8000\ndtype: bfloat16\nmax-model-len: 2048\nmax-num-seqs: 1\nenforce-eager: true\nenable-log-requests: false\nenable-log-outputs: false\ndisable-uvicorn-access-log: true\nlog-config-file: /app/config/logging.json\nmiddleware:\n  - app.request_logging.RequestMetadataMiddleware\n"
+      }
+    },
+    {
+      "name": "vllm-environment",
+      "data": {
+        "HF_HOME": "/home/app/.cache/huggingface",
+        "HF_HUB_OFFLINE": "1",
+        "OMP_NUM_THREADS": "4",
+        "PYTHONPATH": "/app",
+        "VLLM_CPU_KVCACHE_SPACE": "1",
+        "VLLM_CPU_OMP_THREADS_BIND": "nobind",
+        "VLLM_LOGGING_CONFIG_PATH": "/app/config/logging.json",
+        "VLLM_NO_USAGE_STATS": "1"
+      }
+    },
+    {
+      "name": "model-download-config",
+      "data": {
+        "MODEL_DIR": "/models/qwen",
+        "MODEL_ID": "Qwen/Qwen2.5-1.5B-Instruct",
+        "MODEL_REVISION": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+      }
+    }
+  ],
+  "notes": [
+    "Closed-loop client concurrency; port-forward included in latency.",
+    "First nonempty SSE content approximates TTFT; TPOT uses content chunk timestamps.",
+    "Warmups excluded; unique early request text reduces prefix cache reuse.",
+    "Four samples are a smoke benchmark; p95 is unstable with small sample counts."
+  ],
+  "scenarios": [
+    {
+      "prompt_profile": "short",
+      "concurrency": 1,
+      "summary": {
+        "requests": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "elapsed_s": 2.3987541000096826,
+        "requests_s": 0.41688308109445793,
+        "output_tokens_s": 3.3350646487556634,
+        "ttft_s": {
+          "mean": 0.891301099996781,
+          "p50": 0.891301099996781,
+          "p95": 0.891301099996781
+        },
+        "e2e_s": {
+          "mean": 2.377467099999194,
+          "p50": 2.377467099999194,
+          "p95": 2.377467099999194
+        },
+        "tpot_s": {
+          "mean": 0.21228192857233807,
+          "p50": 0.21228192857233807,
+          "p95": 0.21228192857233807
+        },
+        "decode_tokens_s": {
+          "mean": 4.7107165773615804,
+          "p50": 4.7107165773615804,
+          "p95": 4.7107165773615804
+        },
+        "prompt_tokens": {
+          "mean": 73,
+          "p50": 73.0,
+          "p95": 73.0
+        },
+        "output_tokens": {
+          "mean": 8,
+          "p50": 8.0,
+          "p95": 8.0
+        }
+      },
+      "requests": [
+        {
+          "ok": true,
+          "ttft_s": 0.891301099996781,
+          "e2e_s": 2.377467099999194,
+          "tpot_s": 0.21228192857233807,
+          "decode_tokens_s": 4.7107165773615804,
+          "prompt_tokens": 73,
+          "output_tokens": 8,
+          "finish_reason": "length"
+        }
+      ]
+    },
+    {
+      "prompt_profile": "long",
+      "concurrency": 1,
+      "summary": {
+        "requests": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "elapsed_s": 12.180844300004537,
+        "requests_s": 0.08209611545561152,
+        "output_tokens_s": 0.6567689236448921,
+        "ttft_s": {
+          "mean": 10.643908800004283,
+          "p50": 10.643908800004283,
+          "p95": 10.643908800004283
+        },
+        "e2e_s": {
+          "mean": 12.156920299996273,
+          "p50": 12.156920299996273,
+          "p95": 12.156920299996273
+        },
+        "tpot_s": {
+          "mean": 0.21612044285575394,
+          "p50": 0.21612044285575394,
+          "p95": 0.21612044285575394
+        },
+        "decode_tokens_s": {
+          "mean": 4.627049559894867,
+          "p50": 4.627049559894867,
+          "p95": 4.627049559894867
+        },
+        "prompt_tokens": {
+          "mean": 1193,
+          "p50": 1193.0,
+          "p95": 1193.0
+        },
+        "output_tokens": {
+          "mean": 8,
+          "p50": 8.0,
+          "p95": 8.0
+        }
+      },
+      "requests": [
+        {
+          "ok": true,
+          "ttft_s": 10.643908800004283,
+          "e2e_s": 12.156920299996273,
+          "tpot_s": 0.21612044285575394,
+          "decode_tokens_s": 4.627049559894867,
+          "prompt_tokens": 1193,
+          "output_tokens": 8,
+          "finish_reason": "length"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "disable_existing_loggers": true,
+  "formatters": {"message": {"format": "%(message)s"}},
+  "handlers": {
+    "discard": {"class": "logging.NullHandler"},
+    "metadata": {
+      "class": "logging.StreamHandler",
+      "stream": "ext://sys.stdout",
+      "formatter": "message"
+    }
+  },
+  "root": {"handlers": ["discard"], "level": "INFO"},
+  "loggers": {
+    "vllm": {"handlers": ["discard"], "level": "INFO", "propagate": false},
+    "uvicorn": {"handlers": ["discard"], "level": "INFO", "propagate": false},
+    "uvicorn.error": {"handlers": ["discard"], "level": "INFO", "propagate": false},
+    "uvicorn.access": {"handlers": ["discard"], "level": "INFO", "propagate": false},
+    "llm.requests": {"handlers": ["metadata"], "level": "INFO", "propagate": false}
+  }
+}

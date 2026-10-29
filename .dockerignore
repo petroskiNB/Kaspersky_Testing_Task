@@ -1,0 +1,10 @@
+.git
+.codex
+.agents
+*.docx
+*.safetensors
+*.img
+models/
+.venv/
+__pycache__/
+.env

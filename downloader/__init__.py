@@ -1,0 +1,1 @@
+"""Model download initialization container."""
